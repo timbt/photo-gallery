@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route, useParams } from 'react-router-dom';
+import Upload from './Upload';
 
 function Photo () {
 
@@ -15,12 +16,13 @@ function App() {
 
       <Switch>
         <Route exact path="/">
-          Hello world!
+          <Upload />
         </Route>
         <Route path = "/:photoID">
           <Photo />
         </Route>
       </Switch>
+
     </Router>
   );
 }
