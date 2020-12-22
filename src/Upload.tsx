@@ -47,7 +47,7 @@ function Upload() {
         <div>
 
             <h1>Upload an image</h1>
-            <input type="file" onChange={e => loadImage(e)}/>
+            <input type="file" onChange={loadImage}/>
 
             <div>
                 <img src={image.previewSrc} alt="preview" hidden={image.previewSrc ? false : true} />
