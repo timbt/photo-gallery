@@ -10,13 +10,15 @@ function Photo () {
 
 }
 
+const API_URL = 'https://serene-spire-68454.herokuapp.com';
+
 function App() {
   return (
     <Router>
 
       <Switch>
         <Route exact path="/">
-          <Upload />
+          <Upload api={API_URL} />
         </Route>
         <Route path = "/:photoID">
           <Photo />
