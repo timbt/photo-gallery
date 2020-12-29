@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
 // Stores an uploaded image and its data URL preview
@@ -11,6 +12,7 @@ function Upload(props: { api : string }) {
 
     const [image, setImage] = useState<UserImage>({});
     const [title, setTitle] = useState("");
+    const [redirectID, setRedirectID] = useState("");
 
     /* Handles storing an uploaded image in the component's state and creating
      * a visible preview for the image */
@@ -51,7 +53,7 @@ function Upload(props: { api : string }) {
             await axios.put(signedURL, image.file);
 
             // Redirect to uploaded image
-            console.log(`TODO: Redirect to ID ${id}`);
+            setRedirectID(id);
 
         } catch (e) {
 
@@ -69,8 +71,14 @@ function Upload(props: { api : string }) {
             </form>
         ) : null;
 
+    
+    // Will redirect to uploaded image after upload
+    const redirectElement = redirectID ? <Redirect to={`/${redirectID}`} /> : null;
+
     return (
         <div>
+
+            {redirectElement}
 
             <h1>Upload an image</h1>
             <input type="file" onChange={loadImage}/>
