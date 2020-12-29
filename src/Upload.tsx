@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
+import {API_URL } from './config';
 
 // Stores an uploaded image and its data URL preview
 interface UserImage {
@@ -8,7 +9,7 @@ interface UserImage {
     previewSrc?: string
 }
 
-function Upload(props: { api : string }) {
+function Upload() {
 
     const [image, setImage] = useState<UserImage>({});
     const [title, setTitle] = useState("");
@@ -44,7 +45,7 @@ function Upload(props: { api : string }) {
 
             // Create image record in application database, and get a signed
             // URL for file upload
-            const response = await axios.post(`${props.api}/upload`, {
+            const response = await axios.post(`${API_URL}/upload`, {
                 filetype, title
             });
             const { id, signedURL } = response.data;

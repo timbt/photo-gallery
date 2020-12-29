@@ -1,16 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route, useParams } from 'react-router-dom';
 import Upload from './Upload';
-
-function Photo () {
-
-  let { photoID } = useParams<{ photoID : string }>();
-
-  return <div>Rendering photo with ID {photoID}</div>;
-
-}
-
-const API_URL = 'https://serene-spire-68454.herokuapp.com';
+import DisplayPicture from './DisplayPicture';
 
 function App() {
   return (
@@ -18,10 +9,10 @@ function App() {
 
       <Switch>
         <Route exact path="/">
-          <Upload api={API_URL} />
+          <Upload />
         </Route>
-        <Route path = "/:photoID">
-          <Photo />
+        <Route path = "/:pictureID">
+          <DisplayPicture />
         </Route>
       </Switch>
 
