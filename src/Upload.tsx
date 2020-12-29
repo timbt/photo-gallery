@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+// Stores an uploaded image and its data URL preview
 interface UserImage {
     file?: File,
     previewSrc?: string
@@ -9,6 +10,7 @@ interface UserImage {
 function Upload(props: { api : string }) {
 
     const [image, setImage] = useState<UserImage>({});
+    const [title, setTitle] = useState("");
 
     /* Handles storing an uploaded image in the component's state and creating
      * a visible preview for the image */
@@ -29,26 +31,40 @@ function Upload(props: { api : string }) {
     };
 
     /** Handles submitting an image to the server */
-    const submitImage = (e : React.FormEvent<HTMLFormElement>) => {
+    const submitImage = async (e : React.FormEvent<HTMLFormElement>) => {
 
         // Prevent page reload on submission
         e.preventDefault();
+    
+        try {
+            // Get the filetype (needed for signed URL creation)
+            const filetype = image.file!.type;
 
-        // Get a signed URL from the API for sending the image to S3
-        axios.get(`${props.api}/sign-s3?file-name=${image.file?.name}&file-type=${image.file?.type}`)
-            .then(response => {
-                // Submit the image to S3 for storage after getting the signed URL
-                return axios.put(response.data.signedRequest, image.file);
+            // Create image record in application database, and get a signed
+            // URL for file upload
+            const response = await axios.post(`${props.api}/upload`, {
+                filetype, title
+            });
+            const { id, signedURL } = response.data;
 
-            }).catch( err => alert("Could not upload image: " + err));
-            
+            // Upload the image to S3
+            await axios.put(signedURL, image.file);
+
+            // Redirect to uploaded image
+            console.log(`TODO: Redirect to ID ${id}`);
+
+        } catch (e) {
+
+            alert("Could not upload image")
+        }
+        
     };
 
     // Submission form will be rendered only if an image has been provided
     const submissionForm = image.file ? 
         (
             <form onSubmit={e => submitImage(e)}>
-                <input type="text" placeholder="Title your image" />
+                <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Title your image" />
                 <input type="submit" value="Submit" />
             </form>
         ) : null;
